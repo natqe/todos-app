@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Create Todo</h2>
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <mat-form-field *ngFor="let control of form.controls | keyvalue">
+      <input matInput [placeholder]="titleCase(control.key)" [formControlName]="control.key" [type]="typeFor(control.key)">
+      <mat-error *ngFor="let error of control.value.errors | keyvalue">
+        {{ errorMessage(control, error) }}
+      </mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-raised-button mat-dialog-close>CANCEL</button>
+  <button mat-raised-button mat-dialog-close (click)="submit()" [disabled]="!form.dirty || form.invalid" color="accent">SAVE</button>
+</mat-dialog-actions>

@@ -1,0 +1,49 @@
+<section>
+  <div *ngIf="items?.data?.length; else placeholder">
+    <mat-form-field>
+      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field>
+    <button mat-raised-button [disabled]="!selection.hasValue()" (click)="remove()"> Remove Selected <mat-icon aria-label="Example icon-button with a heart icon">delete</mat-icon></button>
+    <table mat-table [dataSource]="items" multiTemplateDataRows class="mat-elevation-z8" matSort>
+
+      <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay" [ngSwitch]="column">
+
+        <div *ngSwitchCase="'select'">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()">
+            </mat-checkbox>
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+            </mat-checkbox>
+          </td>
+        </div>
+        <div *ngSwitchDefault>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{titleCase(column)}} </th>
+          <td mat-cell *matCellDef="let element"> {{ column === 'endDate' ? (endDate(element) |date) : element[column]}} </td>
+        </div>
+      </ng-container>
+
+      <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+          <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+            <div class="example-element-description">
+              <span> Description:</span><br>
+              <span class="example-element-description-attribution"> {{element.body}} </span>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+      <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" class="example-element-row" [class.example-expanded-row]="expandedElement === element"
+        (click)="expandedElement = expandedElement === element ? null : element">
+      </tr>
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+    </table>
+  </div>
+  <ng-template #placeholder>
+    <app-add-new-todo></app-add-new-todo>
+  </ng-template>
+</section>
