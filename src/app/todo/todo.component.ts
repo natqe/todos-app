@@ -14,7 +14,7 @@ import { Todo } from './todo.model'
 export class TodoComponent {
 
   @Emitter(TodosState.upsert)
-  upsert: Emittable<Array<Partial<Todo> & { Id: Todo['id'] }>>
+  upsert: Emittable<Array<Partial<Todo> & { id: Todo['id'] }>>
 
   constructor(
     @Inject(MAT_DIALOG_DATA)

@@ -25,13 +25,13 @@ export class TodosState implements NgxsOnInit {
   }
 
   @Receiver({ type: '[TODOS] Upsert' })
-  static upsert({ getState, patchState }: StateContext<typeof defaults>, { payload }: EmitterAction<Array<Partial<Todo> & { Id: Todo['id'] }>>) {
+  static upsert({ getState, patchState }: StateContext<typeof defaults>, { payload }: EmitterAction<Array<Partial<Todo> & { id: Todo['id'] }>>) {
 
     const todos = [...getState().todos]
 
     for (const item of payload) {
 
-      const originalIndex = findIndex(todos, { id: item.Id })
+      const originalIndex = findIndex(todos, { id: item.id })
 
       originalIndex !== -1 ? todos[originalIndex] = defaultsDeep(item, todos[originalIndex]) : todos.push(<Todo>item)
 
@@ -62,7 +62,7 @@ export class TodosState implements NgxsOnInit {
 
     for (const todo of todos) todo.createdAt = new Date(todo.createdAt)
 
-    patchState({ todos: JSON.parse(localStorage.todos), loading: false })
+    patchState({ todos, loading: false })
 
   }
 
